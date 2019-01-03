@@ -14,9 +14,9 @@ bp = Blueprint('machine', __name__)
 def index():
     db = get_db()
     machines = db.execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
+        'SELECT m.id, ip, cpu, mem, username, host'
+        ' FROM machine m JOIN user u ON m.owner_id = u.id'
+        ' ORDER BY ip DESC'
     ).fetchall()
     return render_template('machine/index.html', machines=machines)
 
