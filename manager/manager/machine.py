@@ -8,91 +8,57 @@ from werkzeug.exceptions import abort
 from manager.auth import login_required
 from manager.db import get_db
 
+
 bp = Blueprint('machine', __name__)
 
-@bp.route('/')
-def index():
+@bp.route('/views', methods=('GET',))
+@login_required
+def views():
+    db = get_db()
     db = get_db()
     machines = db.execute(
         'SELECT m.id, ip, cpu, mem, username, host'
         ' FROM machine m JOIN user u ON m.owner_id = u.id'
         ' ORDER BY ip DESC'
     ).fetchall()
-    return render_template('machine/index.html', machines=machines)
+    return render_template('machine/views.html', machines=machines)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        input_ip = request.form['inputIP']
+        input_host = request.form['inputHost']
+        input_owner = request.form['inputOwner']
+        select_cpu = request.form['selectCPU']
+        select_mem = request.form['selectMEM']
         error = None
 
-        if not title:
-            error = 'Title is required.'
+        db = get_db()
+        user = db.execute(
+            'SELECT * FROM user WHERE username = ?', (input_owner,)
+        ).fetchone()
+
+        if user is None:
+            error = 'Incorrect owner name.'
 
         if error is not None:
             flash(error)
         else:
-            db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, body, g.user['id'])
+                'INSERT INTO machine (ip, host, cpu, mem, owner_id)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (input_ip, input_host, select_cpu, select_mem, user['id'])
             )
             db.commit()
-            return redirect(url_for('machine.index'))
+            return redirect(url_for('machine.views'))
 
     return render_template('machine/create.html')
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
-@login_required
-def update(id):
-    post = get_post(id)
-
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
-
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'UPDATE post SET title = ?, body = ?'
-                ' WHERE id = ?',
-                (title, body, id)
-            )
-            db.commit()
-            return redirect(url_for('machine.index'))
-
-    return render_template('machine/update.html', post=post)
-
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route('/<int:id>/delete', methods=('POST', 'GET'))
 @login_required
 def delete(id):
-    get_post(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
+    db.execute('DELETE FROM machine WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('machine.index'))
-
-def get_post(id, check_author=True):
-    post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
-        (id,)
-    ).fetchone()
-
-    if post is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    if check_author and post['author_id'] != g.user['id']:
-        abort(403)
-
-    return post
+    return redirect(url_for('machine.views'))

@@ -1,0 +1,46 @@
+{% extends 'basebar.html' %}
+
+{% block content %}
+<div class="container">
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">IP</th>
+        <th scope="col">CPU</th>
+        <th scope="col">MEM</th>
+        <th scope="col">OWNER</th>
+        <th scope="col">HOST</th>
+        <th scope="col">OPERATE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for machine in machines %}
+        <tr>
+          <td>{{ machine['id'] }}</td>
+          <td>{{ machine['ip'] }}</td>
+          <td>{{ machine['cpu'] }}</td>
+          <td>{{ machine['mem'] }}</td>
+          <td>{{ machine['username'] }}</td>
+          <td>{{ machine['host'] }}</td>
+          <td>
+            <a href="{{ url_for('machine.views') }}">reset</a>
+            <a href="{{ url_for('machine.views') }}">stop</a>
+            <a href="{{ url_for('machine.views') }}">start</a>
+            <a href="{{ url_for('machine.delete', id=machine['id']) }}">delete</a>
+
+            <!--
+            <form id="form1" action="{{ url_for('machine.delete', id=machine['id']) }}" method="post">
+                <a href="javascript:;" onclick="document.getElementById('form1').submit();">delete</a>
+            </form>
+            <form id="form1" action="{{ url_for('machine.delete', id=machine['id']) }}" method="post">
+                <a href="javascript:;" onclick="document.getElementById('form1').submit();">delete</a>
+            </form>
+            -->
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

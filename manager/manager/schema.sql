@@ -20,3 +20,5 @@ CREATE TABLE machine (
   FOREIGN KEY (owner_id) REFERENCES user (id),
   FOREIGN KEY (update_user) REFERENCES user (id)
 );
+
+INSERT INTO user (username, password, privilege) VALUES ("admin", "admin", 0)
