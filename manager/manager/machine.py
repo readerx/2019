@@ -15,7 +15,6 @@ bp = Blueprint('machine', __name__)
 @login_required
 def views():
     db = get_db()
-    db = get_db()
     machines = db.execute(
         'SELECT m.id, ip, cpu, mem, username, host'
         ' FROM machine m JOIN user u ON m.owner_id = u.id'
