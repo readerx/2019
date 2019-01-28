@@ -24,9 +24,9 @@
           <td>{{ machine['username'] }}</td>
           <td>{{ machine['host'] }}</td>
           <td>
-            <a href="{{ url_for('machine.views') }}">reset</a>
-            <a href="{{ url_for('machine.views') }}">stop</a>
-            <a href="{{ url_for('machine.views') }}">start</a>
+            <a href="{{ url_for('machine.reset', id=machine['id']) }}">reset</a>
+            <a href="{{ url_for('machine.stop', id=machine['id']) }}">stop</a>
+            <a href="{{ url_for('machine.start', id=machine['id']) }}">start</a>
             <a href="{{ url_for('machine.delete', id=machine['id']) }}">delete</a>
 
             <!--

@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app
 )
 from werkzeug.exceptions import abort
 
@@ -60,4 +60,22 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM machine WHERE id = ?', (id,))
     db.commit()
+    return redirect(url_for('machine.views'))
+
+@bp.route('/<int:id>/reset', methods=('POST', 'GET'))
+@login_required
+def reset(id):
+    current_app.logger.info("reset machine {id}".format(id=id))
+    return redirect(url_for('machine.views'))
+
+@bp.route('/<int:id>/start', methods=('POST', 'GET'))
+@login_required
+def start(id):
+    current_app.logger.info("start machine {id}".format(id=id))
+    return redirect(url_for('machine.views'))
+
+@bp.route('/<int:id>/stop', methods=('POST', 'GET'))
+@login_required
+def stop(id):
+    current_app.logger.info("stop machine {id}".format(id=id))
     return redirect(url_for('machine.views'))
