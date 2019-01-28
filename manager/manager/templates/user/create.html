@@ -1,0 +1,56 @@
+{% extends 'basebar.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form method="post">
+    <div class="form-group row">
+      <label for="inputIP" class="col-sm-1 col-form-label">IP</label>
+      <div class="col-sm-4">
+        <input class="form-control" name="inputIP" id="inputIP" placeholder="IP" required autofocus>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputHost" class="col-sm-1 col-form-label">Host</label>
+      <div class="col-sm-4">
+        <input class="form-control" name="inputHost" id="inputHost" placeholder="Host" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputOwner" class="col-sm-1 col-form-label">Owner</label>
+      <div class="col-sm-4">
+        <input class="form-control" name="inputOwner" id="inputOwner" placeholder="Owner" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="selectCPU" class="col-sm-1 col-form-label">CPU</label>
+      <div class="col-sm-4">
+        <select class="custom-select" name="selectCPU", id="selectCPU">
+          <option selected value="2C">2C</option>
+          <option value="4C">4C</option>
+          <option value="6C">6C</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="selectMEM" class="col-sm-1 col-form-label">MEM</label>
+      <div class="col-sm-4">
+        <select class="custom-select" name="selectMEM", id="selectMEM">
+          <option selected value="4G">4G</option>
+          <option value="6G">6G</option>
+          <option value="8G">8G</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="buttonSubmit" class="col-sm-1 col-form-label"></label>
+      <div class="col-sm-4">
+        <button type="submit" class="btn btn-primary" name="buttonSubmit">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
