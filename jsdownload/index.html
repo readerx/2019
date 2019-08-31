@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <button id="$start">Start</button>
+
+    <script src="js/ponyfill.js"></script>
+    <script src="js/StreamSaver.js"></script>
+    <script>
+      $start.onclick = () => {
+        const url = '/data/a.cpp'
+
+        fetch(url).then(res => {
+          const readableStream = res.body
+
+          var fileStream = streamSaver.createWriteStream('a.cpp', { size: 10 })
+          var writer = fileStream.getWriter()
+
+          const reader = res.body.getReader()
+          const pump = () => reader.read()
+            .then(res => res.done
+              ? writer.close()
+              : writer.write(res.value).then(pump))
+
+          pump()
+        })
+      }
+    </script>
+  </body>
+</html>
